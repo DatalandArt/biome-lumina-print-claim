@@ -1,0 +1,388 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Biome Lumina — Claimed Prints</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@300;400&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #060606;
+        --surface2: #141414;
+        --border: #1a1a1a;
+        --text: #d4cfc8;
+        --text-dim: #88847f;
+        --text-vibrant: #ffffff;
+        --accent: #c4a882;
+        --claimed: #ff4d4d;
+        --avail: #00ff88;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        background: var(--bg);
+        color: var(--text);
+        font-family: "DM Sans", sans-serif;
+        font-weight: 300;
+        -webkit-font-smoothing: antialiased;
+      }
+      .mono {
+        font-family: "DM Mono", monospace;
+      }
+
+      /* Header */
+      .header {
+        padding: 40px 48px 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+      }
+      .brand-label {
+        font-size: 10px;
+        letter-spacing: 0.2em;
+        color: var(--text-dim);
+        text-transform: uppercase;
+        margin-bottom: 8px;
+      }
+      .brand-title {
+        font-size: 36px;
+        font-weight: 300;
+        letter-spacing: -0.03em;
+        line-height: 1;
+      }
+      .brand-title em {
+        font-style: normal;
+        color: var(--accent);
+      }
+      .brand-sub {
+        margin-top: 10px;
+        font-size: 13px;
+        color: var(--text-dim);
+        line-height: 1.65;
+        max-width: 520px;
+      }
+      .header-right {
+        text-align: right;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+      .header-right a {
+        font-size: 11px;
+        color: var(--accent);
+        text-decoration: none;
+        letter-spacing: 0.05em;
+        transition: opacity 0.3s;
+      }
+      .header-right a:hover {
+        opacity: 0.6;
+      }
+      .date {
+        font-size: 11px;
+        color: var(--text-vibrant);
+        font-weight: 600;
+        letter-spacing: 0.05em;
+      }
+
+      /* Stats */
+      .stats {
+        display: flex;
+        gap: 1px;
+        margin: 40px 48px 0;
+        background: var(--border);
+        border: 1px solid var(--border);
+      }
+      .stat-cell {
+        flex: 1;
+        background: var(--bg);
+        padding: 20px 24px;
+      }
+      .stat-label {
+        font-size: 9px;
+        letter-spacing: 0.15em;
+        color: var(--text-dim);
+        text-transform: uppercase;
+        margin-bottom: 6px;
+      }
+      .stat-val {
+        font-size: 26px;
+        font-weight: 300;
+      }
+      .stat-bar {
+        height: 2px;
+        background: var(--border);
+        margin-top: 10px;
+        border-radius: 1px;
+        overflow: hidden;
+      }
+      .stat-bar-fill {
+        height: 100%;
+        background: var(--accent);
+        transition: width 1.2s ease;
+      }
+
+      /* Grid Section */
+      .viz-section {
+        padding: 48px 48px 0;
+      }
+      .viz-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        margin-bottom: 20px;
+      }
+      .viz-legend {
+        display: flex;
+        gap: 20px;
+        font-size: 11px;
+        color: var(--text-dim);
+        align-items: center;
+      }
+      .legend-dot {
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        border-radius: 2px;
+        margin-right: 6px;
+      }
+      .legend-dot.claimed {
+        background: var(--claimed);
+      }
+      .legend-dot.avail {
+        background: var(--avail);
+      }
+
+      .token-grid {
+        display: grid;
+        grid-template-columns: repeat(50, 1fr);
+        gap: 1px;
+        background: var(--border);
+        border: 1px solid var(--border);
+      }
+      .cell {
+        aspect-ratio: 1;
+        background: #0a0a0a;
+        color: #333;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 6px;
+        font-family: "DM Mono";
+        cursor: pointer;
+      }
+      .cell.cl {
+        background: #2a0a0a;
+        color: var(--claimed);
+      }
+      .cell.av {
+        background: #0a1a0a;
+        color: var(--avail);
+      }
+      .cell:hover {
+        background: var(--text-vibrant);
+        color: #000;
+        z-index: 2;
+        transform: scale(1.8);
+        font-weight: 600;
+      }
+
+      /* Simplified Info Section */
+      .info-section {
+        padding: 48px;
+        margin-top: 40px;
+        border-top: 1px solid var(--border);
+      }
+      .info-block-title {
+        font-size: 10px;
+        letter-spacing: 0.15em;
+        color: var(--text-dim);
+        text-transform: uppercase;
+        margin-bottom: 12px;
+      }
+      .info-block p {
+        font-size: 14px;
+        line-height: 1.7;
+        color: var(--text-dim);
+        max-width: 800px;
+      }
+
+      footer {
+        padding: 32px 48px;
+        border-top: 1px solid var(--border);
+        display: flex;
+        justify-content: space-between;
+        font-size: 10px;
+        color: var(--text-dim);
+      }
+      footer a {
+        color: var(--accent);
+        text-decoration: none;
+      }
+
+      .tooltip {
+        position: fixed;
+        background: #000;
+        color: #fff;
+        padding: 8px 12px;
+        font-size: 10px;
+        pointer-events: none;
+        opacity: 0;
+        border: 1px solid var(--border);
+        z-index: 100;
+        backdrop-filter: blur(10px);
+      }
+      .tooltip.show {
+        opacity: 1;
+      }
+
+      @media (max-width: 1000px) {
+        .token-grid {
+          grid-template-columns: repeat(20, 1fr);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <div>
+        <div class="brand-label mono">Refik Anadol Studio × DATALAND</div>
+        <div class="brand-title">Biome <em>Lumina</em></div>
+        <div class="brand-sub">
+          Claimed Prints — Monitoring unique living paintings paired with
+          physical 24″×44″ prints.
+        </div>
+      </div>
+      <div class="header-right mono">
+        <div class="date" id="lastUpdated">SYNCING...</div>
+        <a
+          href="https://opensea.io/collection/dataland-biomelumina"
+          target="_blank"
+          >OpenSea ↗</a
+        >
+      </div>
+    </div>
+
+    <div class="stats mono">
+      <div class="stat-cell">
+        <div class="stat-label">Claimed</div>
+        <div class="stat-val"><span id="count">0</span>/1000</div>
+        <div class="stat-bar">
+          <div class="stat-bar-fill" id="progress"></div>
+        </div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-label">Floor Price</div>
+        <div class="stat-val">1.55 ETH</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-label">Total Volume</div>
+        <div class="stat-val">1,465 ETH</div>
+      </div>
+    </div>
+
+    <div class="viz-section">
+      <div class="viz-header">
+        <span class="mono" style="font-size: 12px; color: var(--text-dim)"
+          >TOKEN MAP</span
+        >
+        <div class="viz-legend mono">
+          <span><span class="legend-dot claimed"></span>Claimed</span>
+          <span><span class="legend-dot avail"></span>Available</span>
+        </div>
+      </div>
+      <div class="token-grid" id="mainGrid"></div>
+    </div>
+
+    <div class="info-section">
+      <div class="info-block">
+        <div class="info-block-title mono">About the Collection</div>
+        <p>
+          Biome Lumina represents a bold new frontier in generative art. As each
+          artwork emerges and transforms, its structure and luminescence is
+          directly shaped by environmental data from rainforests around the
+          globe. Each piece is part of an ongoing collaboration between nature,
+          code, and the collector.
+        </p>
+      </div>
+    </div>
+
+    <footer class="mono">
+      <span>© 2026 Refik Anadol Studio</span>
+      <a href="https://dataland.com" target="_blank">dataland.com</a>
+    </footer>
+
+    <div id="tip" class="tooltip mono"></div>
+
+    <script>
+      const SHEET_ID = "1oULuNZMai-mUxi7LkDa58Oj02AqTs9vZl3eyNemNkuA";
+      const grid = document.getElementById("mainGrid");
+
+      let gridHtml = "";
+      for (let i = 1; i <= 1000; i++) {
+        gridHtml += `<div class="cell" id="t${i}">${i}</div>`;
+      }
+      grid.innerHTML = gridHtml;
+
+      window.handleData = function (response) {
+        try {
+          const claimedIds = new Set();
+          let lastDate = "N/A";
+          const rows = response.table.rows;
+
+          rows.forEach((row) => {
+            if (row.c[0]) {
+              const id = parseInt(row.c[0].v);
+              if (!isNaN(id)) claimedIds.add(id);
+            }
+            if (row.c[1]) lastDate = row.c[1].f || row.c[1].v;
+          });
+
+          for (let i = 1; i <= 1000; i++) {
+            const el = document.getElementById("t" + i);
+            el.className = claimedIds.has(i) ? "cell cl" : "cell av";
+          }
+
+          document.getElementById("lastUpdated").textContent =
+            "LAST UPDATED: " + lastDate.toUpperCase();
+          document.getElementById("count").textContent = claimedIds.size;
+          document.getElementById("progress").style.width =
+            claimedIds.size / 10 + "%";
+        } catch (err) {
+          document.getElementById("lastUpdated").textContent = "SYNC ERROR";
+        }
+      };
+
+      const loader = document.createElement("script");
+      loader.src = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=responseHandler:handleData`;
+      document.body.appendChild(loader);
+
+      const tip = document.getElementById("tip");
+      grid.addEventListener("mouseover", (e) => {
+        if (e.target.classList.contains("cell")) {
+          const isCl = e.target.classList.contains("cl");
+          tip.innerHTML = `LUMINA #${e.target.textContent}<br><span style="color:${isCl ? "var(--claimed)" : "var(--avail)"}">${isCl ? "CLAIMED" : "AVAILABLE"}</span>`;
+          tip.classList.add("show");
+        }
+      });
+      document.addEventListener("mousemove", (e) => {
+        tip.style.left = e.clientX + 15 + "px";
+        tip.style.top = e.clientY - 15 + "px";
+      });
+      grid.addEventListener("mouseout", () => tip.classList.remove("show"));
+      grid.addEventListener("click", (e) => {
+        if (e.target.classList.contains("cell")) {
+          window.open(
+            `https://opensea.io/assets/ethereum/0xb097fba49a679a61b18b7079b99a953ca2691c9d/${e.target.textContent}`,
+            "_blank",
+          );
+        }
+      });
+    </script>
+  </body>
+</html>
